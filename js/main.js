@@ -16,6 +16,20 @@ class Matrix
         this._ncol = columns
     }
 
+    static fromArray(arr)
+    {
+        let mat = new Matrix(arr.length, arr[0].length)
+        for(let i = 0; i < mat._nrow; i++)
+        {
+            for(let j = 0; j < mat._ncol; j++)
+            {
+                mat.set(i+1, j+1, arr[i][j])
+            }
+        }
+
+        return mat
+    }
+
     get(i, j) 
     {
         return this._arr[i-1][j-1]
@@ -57,7 +71,7 @@ class Matrix
         }
     }
 
-    D(i, j)
+    minor(i, j)
     {
         if(this._ncol !== this._nrow)
             throw new MatrixError('Error geting D: Matrix must be square')
@@ -79,6 +93,36 @@ class Matrix
         }
         return d
     }
+
+    D(i, j)
+    {
+        return this.minor(i, j).det()
+    }
+
+    C(i, j)
+    {
+        return Math.pow(-1, i+j) * this.D(i, j)
+    }
+
+    det()
+    {
+        if(this._ncol !== this._nrow)
+            throw new MatrixError('Error computing determinant: Matrix must be square')
+
+        let n = this._nrow
+
+        if(n == 1)
+            return this._arr[0][0]
+
+        let sum = 0
+        for(let j = 0; j < this._arr[0].length; j++)
+        {
+            sum += this._arr[0][j] * this.C(1, j + 1)
+        }
+        return sum
+    }
+
+
 }
 
 class MatrixError extends Error 
@@ -90,22 +134,21 @@ class MatrixError extends Error
     }
 }
 
-// let mat = new Matrix(5, 5)
+// let mat = new Matrix(4, 4)
 
-// mat.setRow(1, [1, 2, 3, 4, 0])
-// mat.setRow(2, [4, 5, 6, 3, 0])
-// mat.setRow(3, [7, 8, 9, 2, 0])
-// mat.setRow(4, [1, 2, 3, 1, 0])
-// mat.setRow(5, [4, 5, 6, 1, 0])
-// mat.setCol(5, [4, 7, 1, 4, 7])
-// console.log(mat.D(1, 2))
+// mat.setRow(1, [1, 2, 3, 4])
+// mat.setRow(2, [4, 5, 6, 3])
+// mat.setRow(3, [7, 8, 3, 2])
+// mat.setRow(4, [1, 2, 3, 1])
 
-let mat = new Matrix(3, 3)
-mat.setRow(1, [2, 3, 1])
-mat.setRow(2, [1, 1, 5])
-mat.setRow(3, [4, 9, 7])
+// mat.setRow(1, [1, 2, 3, 4, 2])
+// mat.setRow(2, [4, 5, 6, 3, 3])
+// mat.setRow(3, [7, 8, 3, 2, 6])
+// mat.setRow(4, [1, 2, 3, 1, 1])
+// mat.setRow(5, [4, 5, 6, 1, 5])
+
+
+let mat = Matrix.fromArray([[3, 4, 5],
+                            [1, 2, 3],
+                            [3, 4, 4]])
 console.log(mat)
-
-console.log(mat.D(2, 2))
-
-
