@@ -122,7 +122,133 @@ class Matrix
         return sum
     }
 
+    T()
+    {
+        let t = new Matrix(this._nrow, this._ncol)
+        for(let i = 0; i < this._arr.length; i++)
+        {
+            for(let j = 0; j < this._arr[i].length; j++)
+            {
+                t.set(j+1, i+1, this._arr[i][j])
+            }
+        }
+        return t
+    }
 
+    inv()
+    {
+        return this.matrixOfCofactors().T().mult_sc(1/this.det())
+    }
+
+    matrixOfCofactors()
+    {
+        let mat = new Matrix(this._nrow, this._ncol)
+        for(let i = 0; i < this._arr.length; i++)
+        {
+            for(let j = 0; j < this._arr[i].length; j++)
+            {
+                mat.set(i+1, j+1, this.C(i+1, j+1))
+            }
+        }
+        return mat
+    }
+
+    mult_sc(constant)
+    {
+        let mat = new Matrix(this._nrow, this._ncol)
+        for(let i = 0; i < this._arr.length; i++)
+        {
+            for(let j = 0; j < this._arr[i].length; j++)
+            {
+                mat.set(i+1, j+1, this._arr[i][j] * constant)
+            }
+        }
+        return(mat)
+    }
+    
+    div_sc(constant)
+    {
+        return this.mult_sc(1/constant)
+    }
+
+    add_sc(constant)
+    {
+        let mat = new Matrix(this._nrow, this._ncol)
+        for(let i = 0; i < this._arr.length; i++)
+        {
+            for(let j = 0; j < this._arr[i].length; j++)
+            {
+                mat.set(i+1, j+1, this._arr[i][j] + constant)
+            }
+        }
+        return(mat)
+    }
+
+    sub_sc(constant)
+    {
+        return this.sum_sc(-constant)
+    }
+
+    mult(other)
+    {
+        if(this._ncol != other._nrow)
+            throw new MatrixError('Cannot multiply matrices: NUMBER OF COLUMNS of the first is DIFFERENT from the NUMBER OF ROWS of the second')
+
+        let mat = new Matrix(this._nrow, other._ncol)
+
+        for(let i = 1; i <= this._nrow; i++)
+        {
+            for(let j = 1; j <= other._ncol ; j++)
+            {
+                let a = 0
+                for(let k = 1; k <= other._nrow; k++)
+                {
+                    a += this.get(i, k) * other.get(k, j)
+                }
+
+                mat.set(i, j, a)
+            }
+        }
+
+        return mat
+    }
+
+    div(other)
+    {
+        return this.mult(other.inv())
+    }
+
+    add(other)
+    {
+        if(this._nrow != other._nrow || this._ncol != other._ncol)
+            throw new MatrixError('Cannot sum matrices: Matrices must have the SAME NUMBER of ROWS and COLUMNS')
+        
+        let mat = new Matrix(this._nrow, this._ncol)
+        for(let i = 1; i <= this._nrow; i++)
+        {
+            for(let j = 1; j <= this._ncol ; j++)
+            {
+                mat.set(i, j, this.get(i, j) + other.get(i, j))
+            }
+        }
+        return mat
+    }
+
+    sub(other)
+    {
+        if(this._nrow != other._nrow || this._ncol != other._ncol)
+            throw new MatrixError('Cannot sum matrices: Matrices must have the SAME NUMBER of ROWS and COLUMNS')
+        
+        let mat = new Matrix(this._nrow, this._ncol)
+        for(let i = 1; i <= this._nrow; i++)
+        {
+            for(let j = 1; j <= this._ncol ; j++)
+            {
+                mat.set(i, j, this.get(i, j) - other.get(i, j))
+            }
+        }
+        return mat
+    }
 }
 
 class MatrixError extends Error 
@@ -141,14 +267,18 @@ class MatrixError extends Error
 // mat.setRow(3, [7, 8, 3, 2])
 // mat.setRow(4, [1, 2, 3, 1])
 
-// mat.setRow(1, [1, 2, 3, 4, 2])
-// mat.setRow(2, [4, 5, 6, 3, 3])
-// mat.setRow(3, [7, 8, 3, 2, 6])
-// mat.setRow(4, [1, 2, 3, 1, 1])
-// mat.setRow(5, [4, 5, 6, 1, 5])
+// let mat = Matrix.fromArray([[1, 2, 3, 4, 2],
+//                             [4, 5, 6, 3, 3],
+//                             [7, 8, 3, 2, 6],
+//                             [1, 2, 3, 1, 1],
+//                             [4, 5, 6, 1, 5]])
 
+// console.log(mat.div_sc(6))
 
-let mat = Matrix.fromArray([[3, 4, 5],
-                            [1, 2, 3],
-                            [3, 4, 4]])
-console.log(mat)
+let mat1 = Matrix.fromArray([[2, 3],
+                             [4, 5]])
+
+let mat2 = Matrix.fromArray([[1, 2],
+                             [1, 5]])
+
+console.log(mat1.sub(mat2))
