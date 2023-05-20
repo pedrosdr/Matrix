@@ -1,5 +1,21 @@
-class Matrix 
+/**********************************************
+ * Script created by Pedro Sartori Dias dos Reis
+ * GitHub: https://github.com/pedrosdr
+**********************************************/
+
+class Matrix
 {
+    /*
+               1     2     3  _  N
+
+        1     a11  a12  a13  _  a1N
+        2     a21  a22  a23  _  a2N
+        3     a31  a32  a33  _  a3N
+        |      |    |    |   \   |
+        N     aN1  aN2  aN3  _  aNN
+    */
+
+    // constructor
     constructor(rows, columns)
     {
         this._arr = Array()
@@ -16,6 +32,12 @@ class Matrix
         this._ncol = columns
     }
 
+    // factory methods
+
+    /*
+    * Generates a Matrix using an Array
+    * returns -> Matrix
+    */
     static fromArray(arr)
     {
         let mat = new Matrix(arr.length, arr[0].length)
@@ -30,21 +52,63 @@ class Matrix
         return mat
     }
 
+    /*
+    * Generates an Identity Matrix
+    * returns -> Matrix
+    */
+    static I(size)
+    {
+        let mat = new Matrix(size, size)
+        for(let i = 1; i <= size; i++)
+        {
+            mat.set(i, i, 1)
+        }
+        return mat
+    }
+
+    // methods
+
+    /*
+    * Returns the value at row (i) and column (j)
+    * i and j start at 1
+    * i and j -> integer
+    * returns -> number
+    */
     get(i, j) 
     {
         return this._arr[i-1][j-1]
     }
 
+    /*
+    * Sets a value to row (i) and column (j)
+    * i and j start at 1
+    * i and j -> integer
+    * value -> number
+    * no return
+    */
     set(i, j, value)
     {
         this._arr[i-1][j-1] = value
     }
 
+    /*
+    * Returns an Array containing the row of index i
+    * i starts at 1
+    * i -> integer
+    * returns -> Array
+    */
     getRow(i)
     {
         return this._arr[i-1]
     }
 
+    /*
+    * Sets a row at index i
+    * i starts at 1
+    * i -> integer
+    * values -> Array
+    * no return
+    */
     setRow(i, values)
     {
         if(values.length !== this._ncol)
@@ -53,6 +117,12 @@ class Matrix
         this._arr[i-1] = values
     }
 
+    /*
+    * Returns an Array containing the columns of index j
+    * j starts at 1
+    * j -> integer
+    * returns -> Array
+    */
     getCol(j)
     {
         let col = Array()
@@ -61,6 +131,13 @@ class Matrix
         return col
     }
 
+    /*
+    * Sets a row at index j
+    * j starts at 1
+    * j -> integer
+    * values -> Array
+    * no return
+    */
     setCol(j, values)
     {
         if(values.length !== this._nrow)
@@ -71,6 +148,12 @@ class Matrix
         }
     }
 
+    /*
+    * Returns the Minor matrix of row i and column j
+    * i and j start at 1
+    * i and j -> integer
+    * returns -> Matrix
+    */
     minor(i, j)
     {
         if(this._ncol !== this._nrow)
@@ -94,16 +177,32 @@ class Matrix
         return d
     }
 
+    /*
+    * Returns the Determinant of the Minor matrix of row i and column j
+    * i and j start at 1
+    * i and j -> integer
+    * returns -> number
+    */
     D(i, j)
     {
         return this.minor(i, j).det()
     }
 
+    /*
+    * Returns the Cofactor of row i and column j
+    * i and j start at 1
+    * i and j -> integer
+    * returns -> number
+    */
     C(i, j)
     {
         return Math.pow(-1, i+j) * this.D(i, j)
     }
 
+    /*
+    * Returns the Determinant of the matrix
+    * returns -> number
+    */
     det()
     {
         if(this._ncol !== this._nrow)
@@ -122,6 +221,10 @@ class Matrix
         return sum
     }
 
+    /*
+    * Returns the Transpose of the matrix
+    * returns -> Matrix
+    */
     T()
     {
         let t = new Matrix(this._nrow, this._ncol)
@@ -135,11 +238,19 @@ class Matrix
         return t
     }
 
+    /*
+    * Returns the Inverse of the matrix
+    * returns -> Matrix
+    */
     inv()
     {
         return this.matrixOfCofactors().T().mult_sc(1/this.det())
     }
 
+    /*
+    * Returns a new Matrix formed by the cofactors of the current Matrix
+    * returns -> Matrix
+    */
     matrixOfCofactors()
     {
         let mat = new Matrix(this._nrow, this._ncol)
@@ -153,42 +264,67 @@ class Matrix
         return mat
     }
 
-    mult_sc(constant)
+    /*
+    * Multiplies the matrix by a scalar
+    * k -> number
+    * returns -> Matrix
+    */
+    mult_sc(k)
     {
         let mat = new Matrix(this._nrow, this._ncol)
         for(let i = 0; i < this._arr.length; i++)
         {
             for(let j = 0; j < this._arr[i].length; j++)
             {
-                mat.set(i+1, j+1, this._arr[i][j] * constant)
+                mat.set(i+1, j+1, this._arr[i][j] * k)
             }
         }
         return(mat)
     }
     
-    div_sc(constant)
+    /*
+    * Divides the matrix by a scalar
+    * k -> number
+    * returns -> Matrix
+    */
+    div_sc(k)
     {
-        return this.mult_sc(1/constant)
+        return this.mult_sc(1/k)
     }
 
-    add_sc(constant)
+    /*
+    * Scalar addition
+    * k -> number
+    * returns -> Matrix
+    */
+    add_sc(k)
     {
         let mat = new Matrix(this._nrow, this._ncol)
         for(let i = 0; i < this._arr.length; i++)
         {
             for(let j = 0; j < this._arr[i].length; j++)
             {
-                mat.set(i+1, j+1, this._arr[i][j] + constant)
+                mat.set(i+1, j+1, this._arr[i][j] + k)
             }
         }
         return(mat)
     }
 
-    sub_sc(constant)
+    /*
+    * Scalar subtraction
+    * k -> number
+    * returns -> Matrix
+    */
+    sub_sc(k)
     {
-        return this.sum_sc(-constant)
+        return this.sum_sc(-k)
     }
 
+    /*
+    * Multiplies the matrix by other matrix
+    * other -> Matrix
+    * returns -> Matrix
+    */
     mult(other)
     {
         if(this._ncol != other._nrow)
@@ -213,11 +349,21 @@ class Matrix
         return mat
     }
 
+    /*
+    * Divides the matrix by other matrix
+    * other -> Matrix
+    * returns -> Matrix
+    */
     div(other)
     {
         return this.mult(other.inv())
     }
 
+    /*
+    * Matrix addition
+    * other -> Matrix
+    * returns -> Matrix
+    */
     add(other)
     {
         if(this._nrow != other._nrow || this._ncol != other._ncol)
@@ -234,6 +380,11 @@ class Matrix
         return mat
     }
 
+    /*
+    * Matrix subtraction
+    * other -> Matrix
+    * returns -> Matrix
+    */
     sub(other)
     {
         if(this._nrow != other._nrow || this._ncol != other._ncol)
@@ -259,26 +410,3 @@ class MatrixError extends Error
         this.name = 'MatrixError'
     }
 }
-
-// let mat = new Matrix(4, 4)
-
-// mat.setRow(1, [1, 2, 3, 4])
-// mat.setRow(2, [4, 5, 6, 3])
-// mat.setRow(3, [7, 8, 3, 2])
-// mat.setRow(4, [1, 2, 3, 1])
-
-// let mat = Matrix.fromArray([[1, 2, 3, 4, 2],
-//                             [4, 5, 6, 3, 3],
-//                             [7, 8, 3, 2, 6],
-//                             [1, 2, 3, 1, 1],
-//                             [4, 5, 6, 1, 5]])
-
-// console.log(mat.div_sc(6))
-
-let mat1 = Matrix.fromArray([[2, 3],
-                             [4, 5]])
-
-let mat2 = Matrix.fromArray([[1, 2],
-                             [1, 5]])
-
-console.log(mat1.sub(mat2))
