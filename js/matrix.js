@@ -16,6 +16,11 @@ class Matrix
     */
 
     // constructor
+
+    /*
+    * Generates a Matrix using an Array
+    * rows and columns -> integer
+    */
     constructor(rows, columns)
     {
         this._arr = Array()
@@ -36,6 +41,7 @@ class Matrix
 
     /*
     * Generates a Matrix using an Array
+    * arr -> Array
     * returns -> Matrix
     */
     static fromArray(arr)
@@ -54,6 +60,7 @@ class Matrix
 
     /*
     * Generates an Identity Matrix
+    * size -> integer
     * returns -> Matrix
     */
     static I(size)
