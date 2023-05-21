@@ -117,11 +117,10 @@
 
         public function minor($i, $j)
         {
-            if($this->nrow !== $this->ncol)
-                throw new MatrixException('Error geting minor: Matrix must be square');
-
-            $n = $this->nrow;
-            $mat = new Matrix($n -1, $n - 1);
+            if($this->nrow == 1 || $this->ncol == 1)
+                throw new MatrixException('Error getting minor: Matrix must not have only 1 row or column');
+            
+            $mat = new Matrix($this->nrow - 1, $this->ncol - 1);
             $rowIndex = 1;
             foreach($this->arr as $x => $row)
             {
@@ -201,9 +200,9 @@
         }
     }
 
-    $mat = Matrix::fromArray([[1, 2, 4],
-                              [4, 5, 2],
-                              [3, 3, 1]]);
+    $mat = Matrix::fromArray([[1],
+                              [4],
+                              [3]]);
 
-    yell($mat->matrixOfCofactors());
+    yell($mat->minor(2, 2));
 ?>

@@ -163,11 +163,10 @@ class Matrix
     */
     minor(i, j)
     {
-        if(this._ncol !== this._nrow)
-            throw new MatrixError('Error geting minor: Matrix must be square')
-
-        let n = this._nrow
-        let mat = new Matrix(n-1, n-1)
+        if(this._nrow == 1 || this._ncol == 1)
+            throw new MatrixError('Error getting minor: Matrix must not have only 1 row or column')
+        
+        let mat = new Matrix(this._nrow - 1, this._ncol - 1)
         let rowIndex = 1
         for(let row in this._arr)
         {
