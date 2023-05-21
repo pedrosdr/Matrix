@@ -18,7 +18,7 @@ class Matrix
     // constructor
 
     /*
-    * Generates a Matrix using an Array
+    * Generates a Matrix using a number of rows and columns
     * rows and columns -> integer
     */
     constructor(rows, columns)
@@ -394,7 +394,7 @@ class Matrix
     sub(other)
     {
         if(this._nrow != other._nrow || this._ncol != other._ncol)
-            throw new MatrixError('Cannot sum matrices: Matrices must have the SAME NUMBER of ROWS and COLUMNS')
+            throw new MatrixError('Cannot subtract matrices: Matrices must have the SAME NUMBER of ROWS and COLUMNS')
         
         let mat = new Matrix(this._nrow, this._ncol)
         for(let i = 1; i <= this._nrow; i++)

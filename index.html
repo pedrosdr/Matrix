@@ -6,10 +6,16 @@
         <title>Matrix</title>
         <script src="js/matrix.js"></script>
         <script>
-            let mat = Matrix.fromArray([[2],
-                                        [1],
-                                        [3]])
-            console.log(mat.minor(1, 1))
+            let b = Matrix.fromArray([[3],
+                                      [1],
+                                      [2]])
+            
+            let a = Matrix.fromArray([[2, 3, 1],
+                                      [4, 5, 1],
+                                      [2, 7, 1]])
+            
+            let x = a.inv().mult(b);
+            console.log(a.div_sc(2))
         </script>
     </head>
     <body>
