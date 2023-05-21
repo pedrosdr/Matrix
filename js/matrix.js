@@ -164,24 +164,24 @@ class Matrix
     minor(i, j)
     {
         if(this._ncol !== this._nrow)
-            throw new MatrixError('Error geting D: Matrix must be square')
+            throw new MatrixError('Error geting minor: Matrix must be square')
 
         let n = this._nrow
-        let d = new Matrix(n-1, n-1)
+        let mat = new Matrix(n-1, n-1)
         let rowIndex = 1
         for(let row in this._arr)
         {
             if(row == i - 1) continue
-            let dRow = Array()
+            let matRow = Array()
             for(let item in this._arr[row])
             {
                 if(item == j - 1) continue
-                dRow.push(this._arr[row][item])
+                matRow.push(this._arr[row][item])
             }
-            d.setRow(rowIndex, dRow)
+            mat.setRow(rowIndex, matRow)
             rowIndex += 1
         }
-        return d
+        return mat
     }
 
     /*
@@ -221,7 +221,7 @@ class Matrix
             return this._arr[0][0]
 
         let sum = 0
-        for(let j = 0; j < this._arr[0].length; j++)
+        for(let j = 0; j < n; j++)
         {
             sum += this._arr[0][j] * this.C(1, j + 1)
         }
@@ -234,15 +234,15 @@ class Matrix
     */
     T()
     {
-        let t = new Matrix(this._nrow, this._ncol)
+        let mat = new Matrix(this._ncol, this._nrow)
         for(let i = 0; i < this._arr.length; i++)
         {
             for(let j = 0; j < this._arr[i].length; j++)
             {
-                t.set(j+1, i+1, this._arr[i][j])
+                mat.set(j+1, i+1, this._arr[i][j])
             }
         }
-        return t
+        return mat
     }
 
     /*

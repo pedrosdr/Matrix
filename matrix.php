@@ -41,6 +41,20 @@
             $this->ncol = $columns;
         }
 
+        // factory methods
+        public static function fromArray(array $arr)
+        {
+            $mat = new Matrix(count($arr), count($arr[0]));
+            for($i = 0; $i < count($arr); $i++)
+            {
+                for($j = 0; $j < count($arr[$i]); $j++)
+                {
+                    $mat->arr[$i][$j] = $arr[$i][$j];
+                }
+            }
+            return $mat;
+        }
+
         // methods
         public function __toString()
         {
@@ -55,6 +69,16 @@
                 $str .= ']' . PHP_EOL;
             }
             return $str;
+        }
+
+        public function get($i, $j)
+        {
+            return $this->arr[$i - 1][$j - 1];
+        }
+
+        public function set($i, $j, $value)
+        {
+            $this->arr[$i - 1][$j - 1] = $value;
         }
 
         public function getRow(int $i)
@@ -90,6 +114,83 @@
                 $this->arr[$i][$j - 1] = $values[$i];
             }
         }
+
+        public function minor($i, $j)
+        {
+            if($this->nrow !== $this->ncol)
+                throw new MatrixException('Error geting minor: Matrix must be square');
+
+            $n = $this->nrow;
+            $mat = new Matrix($n -1, $n - 1);
+            $rowIndex = 1;
+            foreach($this->arr as $x => $row)
+            {
+                if($x == $i - 1) continue;
+                $matRow = array();
+                foreach($row as $y => $item)
+                {
+                    if($y == $j - 1) continue;
+                    $matRow[] = $item;
+                }
+                $mat->setRow($rowIndex, $matRow);
+                $rowIndex++;
+            }
+            return $mat;
+        }
+
+        public function D($i, $j)
+        {
+            return $this->minor($i, $j)->det();
+        }
+
+        public function C($i, $j)
+        {
+            return pow(-1, $i + $j) * $this->D($i, $j);
+        }
+
+        public function det()
+        {
+            if($this->nrow != $this->nrow)
+                throw new MatrixException('Error computing determinant: Matrix must be square');
+            
+            $n = $this->nrow;
+
+            if($n == 1)
+                return $this->arr[0][0];
+
+            $sum = 0;
+            for($j = 0; $j < $n; $j++)
+            {
+                $sum += $this->arr[0][$j] * $this->C(1, $j + 1);
+            }
+            return $sum;
+        }
+
+        public function T()
+        {
+            $mat = new Matrix($this->ncol, $this->nrow);
+            for($i = 1; $i <= $this->nrow; $i++)
+            {
+                for($j = 1; $j <= $this->ncol; $j++)
+                {
+                    $mat->set($j, $i, $this->get($i, $j));
+                }
+            }
+            return $mat;
+        }
+
+        public function matrixOfCofactors()
+        {
+            $mat = new Matrix($this->nrow, $this->ncol);
+            for($i = 1; $i <= $this->nrow; $i++)
+            {
+                for($j = 1; $j <= $this->ncol; $j++)
+                {
+                    $mat->set($i, $j, $this->C($i, $j));
+                }
+            }
+            return $mat;
+        }
     }
 
     class MatrixException extends Exception
@@ -100,8 +201,9 @@
         }
     }
 
-    $mat = new Matrix(5, 5);
-    $mat->setCol(1, [1, 2, 3, 4]);
-    yell($mat);
-    
+    $mat = Matrix::fromArray([[1, 2, 4],
+                              [4, 5, 2],
+                              [3, 3, 1]]);
+
+    yell($mat->matrixOfCofactors());
 ?>
