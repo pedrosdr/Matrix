@@ -8,14 +8,16 @@
         <script>
             let b = Matrix.fromArray([[3],
                                       [1],
-                                      [2]])
+                                      [2],
+                                      [3]])
             
             let a = Matrix.fromArray([[2, 3, 1],
                                       [4, 5, 1],
-                                      [2, 7, 1]])
+                                      [2, 7, 1],
+                                      [4, 3, 1]])
             
-            let x = a.inv().mult(b);
-            console.log(a.div_sc(2))
+            let x = a.T().mult(a).inv().mult(a.T()).mult(b)
+            console.log(x)
         </script>
     </head>
     <body>

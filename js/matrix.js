@@ -73,6 +73,26 @@ class Matrix
         return mat
     }
 
+    // properties
+
+    /*
+    * Returns the number of rows
+    * returns -> number
+    */
+    get numberOfRows()
+    {
+        return this._nrow
+    }
+
+    /*
+    * Returns the number of columns
+    * returns -> number
+    */
+    get numberOfColumns()
+    {
+        return this._nrow
+    }
+
     // methods
 
     /*
