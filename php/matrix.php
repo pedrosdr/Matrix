@@ -15,9 +15,7 @@
         |      |    |    |   \   |
         N     aN1  aN2  aN3  _  aNN
         */
-
-        // constructor
-
+        
         // fields
         private array $arr;
         private int $nrow;
@@ -347,6 +345,24 @@
         public function sub_sc($k)
         {
             return $this->add_sc(-$k);
+        }
+
+        /*
+        * Applies a transformation on the items of the matrix
+        * callback -> function [must take a number as argument and return a number]
+        * returns -> Matrix
+        */
+        public function apply($callback)
+        {
+            $mat = new Matrix($this->nrow, $this->ncol);
+            for($i = 1; $i <= count($this->arr); $i++)
+            {
+                for($j = 1; $j <= count($this->arr[$i-1]); $j++)
+                {
+                    $mat->set($i, $j, $callback($this->get($i, $j)));
+                }
+            }
+            return $mat;
         }
 
         /*

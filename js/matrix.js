@@ -347,6 +347,24 @@ class Matrix
     }
 
     /*
+    * Applies a transformation on the items of the matrix
+    * callback -> function [must take number as argument and return number]
+    * returns -> Matrix
+    */
+    apply(callback)
+    {
+        let mat = new Matrix(this._nrow, this._ncol)
+        for(let i = 1; i <= mat._arr.length; i++)
+        {
+            for(let j = 1; j <= mat._arr[i-1].length; j++)
+            {
+                mat.set(i, j, callback(this.get(i, j)))
+            }
+        }
+        return mat
+    }
+
+    /*
     * Multiplies the matrix by other matrix
     * other -> Matrix
     * returns -> Matrix
