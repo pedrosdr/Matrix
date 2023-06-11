@@ -1,5 +1,5 @@
 /**********************************************
- * Script created by Pedro Sartori Dias dos Reis
+ * Created by Pedro Sartori Dias dos Reis
  * GitHub: https://github.com/pedrosdr
 **********************************************/
 
@@ -94,6 +94,23 @@ class Matrix
     }
 
     // methods
+
+    /*
+    * Returns a new Matrix identical to te actual one
+    * returns -> Matrix
+    */
+    copy()
+    {
+        let mat = new Matrix(this._nrow, this._ncol)
+        for(let i in this._arr)
+        {
+            for(let j in this._arr[i])
+            {
+                mat._arr[i][j] = this._arr[i][j]
+            }
+        }
+        return mat
+    }
 
     /*
     * Returns the value at row (i) and column (j)

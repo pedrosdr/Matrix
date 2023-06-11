@@ -1,6 +1,6 @@
 <?php
     /**********************************************
-    * Script created by Pedro Sartori Dias dos Reis
+    * Created by Pedro Sartori Dias dos Reis
     * GitHub: https://github.com/pedrosdr
     **********************************************/
 
@@ -91,6 +91,23 @@
                 $str .= ']' . PHP_EOL;
             }
             return $str;
+        }
+
+        /*
+        * Returns a new Matrix identical to te actual one
+        * returns -> Matrix
+        */
+        public function copy() 
+        {
+            $mat = new Matrix($this->nrow, $this->ncol);
+            for($i = 0; $i < count($this->arr); $i++)
+            {
+                for($j = 0; $j < count($this->arr[$i]); $j++)
+                {
+                    $mat->arr[$i][$j] = $this->arr[$i][$j];
+                }
+            }
+            return $mat;
         }
 
         /*
