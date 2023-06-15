@@ -113,6 +113,135 @@ class Matrix
     }
 
     /*
+    * Returns a new matrix with the given transformation applied to all items
+    * callback -> function [must take number as argument and return number]
+    * returns -> Matrix
+    */
+    apply(callback)
+    {
+        let mat = new Matrix(this._nrow, this._ncol)
+        for(let i = 1; i <= mat._arr.length; i++)
+        {
+            for(let j = 1; j <= mat._arr[i-1].length; j++)
+            {
+                mat.set(i, j, callback(this.get(i, j)))
+            }
+        }
+        return mat
+    }
+
+    /*
+    * Applies a transformation to all items of the matrix
+    * callback -> function [must take number as argument and return number]
+    * no return
+    */
+    transform(callback)
+    {
+        for(let i = 1; i <= this._arr.length; i++)
+        {
+            for(let j = 1; j <= this._arr[i-1].length; j++)
+            {
+                this.set(i, j, callback(this.get(i, j)))
+            }
+        }
+    }
+
+    /*
+    * Applies a transformation to the items of a row
+    * i -> integer
+    * callback -> function [must take number as argument and return number]
+    * no return
+    */
+    transformRow(i, callback)
+    {
+        let row = this.getRow(i)
+
+        for(let n = 0; n < row.length; n++)
+            row[n] = callback(row[n])
+        
+        this.setRow(i, row)
+    }
+
+    /*
+    * Applies a transformation to the items of the given rows
+    * ...i -> integers
+    * callback -> function [must take number as argument and return number]
+    * no return
+    */
+    transformRows(callback, ...i)
+    {
+        for(let key in i)
+        {
+            let row = this.getRow(i[key])
+
+            for(let n = 0; n < row.length; n++)
+                row[n] = callback(row[n])
+        
+            this.setRow(i[key], row)
+        }
+    }
+
+    /*
+    * Applies a transformation to the items of a column
+    * j -> integer
+    * callback -> function [must take number as argument and return number]
+    * no return
+    */
+    transformCol(j, callback)
+    {
+        let col = this.getCol(j)
+
+        for(let n = 0; n < col.length; n++)
+            col[n] = callback(col[n])
+        
+        this.setCol(j, col)
+    }
+
+    /*
+    * Applies a transformation to the items of the given columns
+    * ...j -> integers
+    * callback -> function [must take number as argument and return number]
+    * no return
+    */
+    transformCols(callback, ...j)
+    {
+        for(let key in j)
+        {
+            let col = this.getCol(j[key])
+
+            for(let n = 0; n < col.length; n++)
+                col[n] = callback(col[n])
+        
+            this.setCol(j[key], col)
+        }
+    }
+
+    /*
+    * Applies a transformation to the item of row i and column j
+    * i and j -> integer
+    * callback -> function [must take number as argument and return number]
+    * no return
+    */
+    transformItem(i, j, callback)
+    {
+        this.set(i, j, callback(this.get(i, j)))
+    }
+
+    /*
+    * Applies a transformation to the items of rows i and columns j
+    * ...ij -> "[i1, j1], [i2, j2], ..., [in, jn]" where i and j -> integer
+    * callback -> function [must take number as argument and return number]
+    * no return
+    */
+    transformItems(callback, ...ij)
+    {
+        for(let key in ij)
+        {
+            this.set(ij[key][0], ij[key][1], callback(this.get(ij[key][0], ij[key][1])))
+        }
+    }
+
+    /*
     * Returns the value at row (i) and column (j)
     * i and j start at 1
     * i and j -> integer
@@ -361,24 +490,6 @@ class Matrix
     sub_sc(k)
     {
         return this.sum_sc(-k)
-    }
-
-    /*
-    * Applies a transformation on the items of the matrix
-    * callback -> function [must take number as argument and return number]
-    * returns -> Matrix
-    */
-    apply(callback)
-    {
-        let mat = new Matrix(this._nrow, this._ncol)
-        for(let i = 1; i <= mat._arr.length; i++)
-        {
-            for(let j = 1; j <= mat._arr[i-1].length; j++)
-            {
-                mat.set(i, j, callback(this.get(i, j)))
-            }
-        }
-        return mat
     }
 
     /*
