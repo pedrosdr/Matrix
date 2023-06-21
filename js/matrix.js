@@ -279,15 +279,50 @@ class Matrix
     * Sets a row at index i
     * i starts at 1
     * i -> integer
-    * values -> Array
+    * value -> number or Array
     * no return
     */
-    setRow(i, values)
+    setRow(i, value)
     {
-        if(values.length !== this._ncol)
-            throw new MatrixError('Invalid number of arguments, tried to add ' + values.length + ' arguments and the matrix row supports ' + this._ncol)
+        if (typeof value == 'number')
+        {
+            for(let j in this._arr[i-1])
+                this._arr[i-1][j] = value
+            
+            return
+        }
+
+        if(value.length !== this._ncol)
+            throw new MatrixError('Invalid number of arguments, tried to add ' + value.length + ' arguments and the matrix row supports ' + this._ncol)
         
-        this._arr[i-1] = values
+        this._arr[i-1] = value
+    }
+
+    /*
+    * Adds a new Row to the matrix
+    * value -> number or Array
+    * no return
+    */
+    addRow(value = 0)
+    {
+        let newRow = Array()
+        for(let j = 0; j < this._ncol; j++)
+            newRow.push(0)
+        this._arr.push(newRow)
+        this._nrow ++
+
+        this.setRow(this._nrow, value)
+    }
+
+    /*
+    * Removes the row of index i from the matrix
+    * i -> number
+    * no return
+    */
+    removeRow(i = this._nrow)
+    {
+        this._arr.splice(i-1, 1)
+        this._nrow --
     }
 
     /*
@@ -308,17 +343,52 @@ class Matrix
     * Sets a row at index j
     * j starts at 1
     * j -> integer
-    * values -> Array
+    * value -> number or Array
     * no return
     */
-    setCol(j, values)
+    setCol(j, value)
     {
-        if(values.length !== this._nrow)
-            throw new MatrixError('Invalid number of arguments, tried to add ' + values.length + ' arguments and the matrix column supports ' + this._nrow)
-        for(let row in this._arr)
+        if (typeof value == 'number')
         {
-            this._arr[row][j-1] = values[row]
+            for(let i in this._arr)
+                this._arr[i][j-1] = value
+            
+            return
         }
+
+        if(value.length !== this._nrow)
+            throw new MatrixError('Invalid number of arguments, tried to add ' + value.length + ' arguments and the matrix column supports ' + this._nrow)
+        for(let i in this._arr)
+        {
+            this._arr[i][j-1] = value[i]
+        }
+    }
+
+    /*
+    * Adds a new Row to the matrix
+    * value -> number or Array
+    * no return
+    */
+    addCol(value = 0)
+    {
+        for(let i in this._arr)
+            this._arr[i].push(0)
+        this._ncol ++
+
+        this.setCol(this._ncol, value)
+    }
+
+    /*
+    * Removes the column of index j from the matrix
+    * j -> number
+    * no return
+    */
+    removeCol(j = this._ncol)
+    {
+        for(let i in this._arr)
+            this._arr[i].splice(j-1, 1)
+        
+        this._ncol --
     }
 
     /*
